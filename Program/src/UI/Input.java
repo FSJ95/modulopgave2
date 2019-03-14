@@ -22,6 +22,7 @@ public class Input {
 
                 System.out.println("\nPlease type a number.");
 
+
             }
         }
         return choice;
@@ -30,13 +31,14 @@ public class Input {
     public static int getIntRangeFromConsole(int x, int y){
 
         int choice;
+        int userInput;
 
         while (true) {
 
             System.out.print("> ");
 
             try {
-                int userInput = Integer.parseInt(sc.nextLine());
+                userInput = Integer.parseInt(sc.nextLine());
 
                 if (userInput >= x && userInput <= y)
                 {
@@ -46,9 +48,11 @@ public class Input {
 
                 System.out.println("\nPlease type a number between " + x + " and " + y + ".");
 
+
             } catch(NumberFormatException e) {
 
                 System.out.println("\nPlease type a number between " + x + " and " + y + ".");
+
 
             }
 

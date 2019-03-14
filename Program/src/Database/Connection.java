@@ -1,20 +1,21 @@
 package Database;
 
 import java.sql.*;
-import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class Connection {
 
     // Connection settings.
     private java.sql.Connection conn = null;
-    private String sqlHost = "jdbc:mysql://localhost:3306/mydb?useSSL=false";
-    private String sqlUsername = "root";
-    private String sqlPassword = "fo76jatosata";
+    private String sqlHost;
+    private String sqlUsername;
+    private String sqlPassword;
 
     // Konstruktor.
     public Connection() {
-
+        this.sqlHost = "jdbc:mysql://localhost:3306/mydb?useSSL=false";
+        this.sqlUsername = "root";
+        this.sqlPassword = "password";
     }
 
     // Konstruktor med connection input.
