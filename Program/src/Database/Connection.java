@@ -6,10 +6,10 @@ import java.sql.DriverManager;
 public class Connection {
 
     // Connection settings.
-    private java.sql.Connection conn = null;
-    private String sqlHost;
-    private String sqlUsername;
-    private String sqlPassword;
+    private static java.sql.Connection conn = null;
+    private static String sqlHost;
+    private static String sqlUsername;
+    private static String sqlPassword;
 
     // Konstruktor.
     public Connection() {
@@ -27,7 +27,7 @@ public class Connection {
 
 
     // Metode der returnerer connection.
-    public java.sql.Connection getConnection() {
+    public static java.sql.Connection getConnection() {
         try {
             conn = DriverManager.getConnection(sqlHost, sqlUsername, sqlPassword);
 

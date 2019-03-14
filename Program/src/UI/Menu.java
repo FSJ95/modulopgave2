@@ -1,9 +1,14 @@
 package UI;
 
+import Database.Connection;
+import Query.Sql;
 
 public class Menu {
 
     private int chosenID;
+    Sql sql = new Sql();
+    Connection conn = new Connection();
+
 
     public void mainMenu() {
 
@@ -11,13 +16,16 @@ public class Menu {
 
         while (running){
             clearScreen();
-            showMenu();
-            switch (Input.getIntRangeFromConsole(0,1 )) {
+            showMainMenu();
+            switch (Input.getIntRangeFromConsole(0,2 )) {
                 case 1:
                     clearScreen();
                     lookupMenu();
                     break;
                 case 2:
+                    clearScreen();
+                    writeYourOwnMenu();
+                    break;
 
                 case 0:
                     running = false;
@@ -42,9 +50,6 @@ public class Menu {
             case 0:
                 clearScreen();
                 break;
-
-
-
         }
 
     }
@@ -66,12 +71,24 @@ public class Menu {
 
     }
 
+    public void writeYourOwnMenu(){
+        clearScreen();
+        showWriteYourOwnMenu();
+        System.out.println(Sql.writeYourOwn(Input.getStringFromConsole(), Connection.getConnection()));
+        Input.pressToContinue();
 
-    public void showMenu() {
+    }
+
+    public void showWriteYourOwnMenu(){
+        System.out.println("\nPlease write wanted SQL statement:");
+    }
+
+    public void showMainMenu() {
         System.out.println(
                 "\nAutomatic Marshalling Yard \n" +
                         "-------------------\n" +
                         "1. Lookup cart/train information. \n" +
+                        "2. Write your own SQL search. \n" +
                         "-------------------\n" +
                         "0. Exit program. \n");
 
@@ -89,8 +106,8 @@ public class Menu {
     }
 
     public void showSpecifyIdMenu(String s){
-        System.out.println("\nPlease specify "+ s +" ID:");
-        System.out.println("(Type '0' to go back)\n");
+        System.out.println("\nPlease specify "+ s +" ID: \n" +
+                            "(Type '0' to go back)\n");
     }
 
     public void clearScreen() {

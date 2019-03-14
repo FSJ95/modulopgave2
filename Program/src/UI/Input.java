@@ -6,6 +6,11 @@ public class Input {
 
     private static Scanner sc = new Scanner(System.in);
 
+    public static String getStringFromConsole() {
+        System.out.print("> ");
+        String userString = sc.nextLine();
+        return userString;
+    }
 
     public static int getIntFromConsole(){
 
