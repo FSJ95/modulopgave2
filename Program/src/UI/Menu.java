@@ -1,7 +1,9 @@
 package UI;
 
-import Database.Connection;
+import Database.*;
 import Query.Sql;
+
+import java.util.*;
 
 public class Menu {
 
@@ -17,7 +19,7 @@ public class Menu {
         while (running){
             clearScreen();
             showMainMenu();
-            switch (Input.getIntRangeFromConsole(0,2 )) {
+            switch (Input.getIntRangeFromConsole(0,3 )) {
                 case 1:
                     clearScreen();
                     lookupMenu();
@@ -26,6 +28,23 @@ public class Menu {
                     clearScreen();
                     writeYourOwnMenu();
                     break;
+                case 3:
+                    clearScreen();
+                    ArrayList<Cart2> cartArray = new ArrayList<Cart2>();
+                    for (int i = 0; i <=10; i++) {
+                        Cart2 cart = new Cart2();
+                        cartArray.add(cart);
+                    }
+
+                    for (Cart2 cart : cartArray) {
+                        System.out.println("\n");
+                        System.out.println(cart.getWeight());
+                        System.out.println(cart.getDestination());
+                        System.out.println(cart.getCargo());
+                    }
+                    Input.pressToContinue();
+                    break;
+
 
                 case 0:
                     running = false;
@@ -74,7 +93,7 @@ public class Menu {
     public void writeYourOwnMenu(){
         clearScreen();
         showWriteYourOwnMenu();
-        System.out.println(Sql.writeYourOwn(Input.getStringFromConsole(), Connection.getConnection()));
+        System.out.println(Sql.writeYourOwn(Input.getStringFromConsole(), conn.getConnection()));
         Input.pressToContinue();
 
     }
@@ -89,6 +108,7 @@ public class Menu {
                         "-------------------\n" +
                         "1. Lookup cart/train information. \n" +
                         "2. Write your own SQL search. \n" +
+                        "3. Test cargo2. \n" +
                         "-------------------\n" +
                         "0. Exit program. \n");
 
