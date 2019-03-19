@@ -30,13 +30,13 @@ public class Menu {
                     break;
                 case 3:
                     clearScreen();
-                    ArrayList<Cart2> cartArray = new ArrayList<Cart2>();
+                    ArrayList<Cart> cartArray = new ArrayList<Cart>();
                     for (int i = 0; i <=10; i++) {
-                        Cart2 cart = new Cart2();
+                        Cart cart = new Cart();
                         cartArray.add(cart);
                     }
 
-                    for (Cart2 cart : cartArray) {
+                    for (Cart cart : cartArray) {
                         System.out.println("\n");
                         System.out.println(cart.getWeight());
                         System.out.println(cart.getDestination());
