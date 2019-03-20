@@ -13,7 +13,7 @@ public class Connection {
 
     // Konstruktor.
     public Connection() {
-        this.sqlHost = "jdbc:mysql://localhost:3306/mydb?useSSL=false";
+        this.sqlHost = "jdbc:mysql://localhost:3306/mydb?useSSL=false&allowMultiQueries=true";
         this.sqlUsername = "root";
         this.sqlPassword = "password";
     }
@@ -29,8 +29,8 @@ public class Connection {
     // Metode der returnerer connection.
     public static java.sql.Connection getConnection() {
         try {
-            conn = DriverManager.getConnection(sqlHost, sqlUsername, sqlPassword);
 
+            conn = DriverManager.getConnection(sqlHost, sqlUsername, sqlPassword);
         } catch (SQLException e) {
 
             System.out.println("Exception: " + e);

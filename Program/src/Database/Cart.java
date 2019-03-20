@@ -11,14 +11,14 @@ public class Cart {
     // så vi kan sikre os at hvis der f.eks. kommer flere cargo-typer i databasen,
     // så bliver de også automatisk tilføjet når der bliver oprettet et nyt cart objekt.
     String[] weightArrayPlaceholder = {"Light", "Medium", "Heavy"};
-    String[] cargoArrayPlaceholder = {"Wood", "Steel", "Gasoline", "Food", "Cars", "Goods"};
+    String[] cargoArrayPlaceholder = {"Oil", "Wood", "Steel", "Gasoline", "Food", "Cars", "General Goods"};
     String[] destinationArrayPlaceholder = {"Berlin", "Duisburg", "Frankfurt", "Hannover", "Kassel", "Köln",
                                 "Leipzig", "Munich", "Nürnberg", "Stuttgart"};
 
     // Arraylist da de er lækre at arbejde med :)
-    private static ArrayList<String> weightArray = new ArrayList<String>();
-    private static ArrayList<String> cargoArray = new ArrayList<String>();
-    private static ArrayList<String> destinationArray = new ArrayList<String>();
+    private ArrayList<String> weightArray = new ArrayList<String>();
+    private ArrayList<String> cargoArray = new ArrayList<String>();
+    private ArrayList<String> destinationArray = new ArrayList<String>();
 
 
     // Vores variabler vi gemmer de valgte værdier i.

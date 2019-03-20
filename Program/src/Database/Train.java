@@ -7,22 +7,30 @@ public class Train {
 
     Random rnd = new Random();
 
+
     // Array vi gemmer togets vogne i.
-    private static ArrayList<String> cartArray = new ArrayList<String>();
+    private ArrayList<Cart> cartArray = new ArrayList<Cart>();
 
 
-    // Konstruktor der tager et int og herefter opretter så mange toge.
-    public Train(int numberOfTrains) {
-        
+    // Konstruktor der tilføjer et tilfædigt antal vogne (op til 10).
+    public Train() {
+        int cartCount = numberOfCarts();
+        for (int i = 0; i <= cartCount; i++){
+            cartArray.add(new Cart());
+        }
     }
 
 
     // Tilfældigt antal vogne på toget.
-    private int numberOfCarts{
+    private int numberOfCarts(){
 
         int randomNumber = rnd.nextInt(10)+1;
 
         return randomNumber;
+    }
+
+    public ArrayList<Cart> getCartArray() {
+        return cartArray;
     }
 
 }

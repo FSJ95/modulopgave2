@@ -30,19 +30,8 @@ public class Menu {
                     break;
                 case 3:
                     clearScreen();
-                    ArrayList<Cart> cartArray = new ArrayList<Cart>();
-                    for (int i = 0; i <=10; i++) {
-                        Cart cart = new Cart();
-                        cartArray.add(cart);
-                    }
+                    generateMenu();
 
-                    for (Cart cart : cartArray) {
-                        System.out.println("\n");
-                        System.out.println(cart.getWeight());
-                        System.out.println(cart.getDestination());
-                        System.out.println(cart.getCargo());
-                    }
-                    Input.pressToContinue();
                     break;
 
 
@@ -53,7 +42,36 @@ public class Menu {
             }
         }
     }
-    
+
+    public void generateMenu() {
+
+        clearScreen();
+        showGenerateMenu();
+
+        int numberOfTrains;
+        int trainCounter;
+
+
+        switch (numberOfTrains = Input.getIntFromConsole()) {
+            case 0:
+                clearScreen();
+                break;
+
+            default:
+                for (trainCounter = 0; trainCounter < numberOfTrains; trainCounter++) {
+                    Sql.addTrains(new Train(),conn.getConnection());
+                    System.out.println("Færdig");
+
+                }
+                System.out.println("\nSuccesfully added all trains (" + trainCounter + ").");
+                Input.pressToContinue();
+                break;
+        }
+
+
+
+    }
+
     public void lookupMenu() {
 
         showLookupMenu();
@@ -98,6 +116,11 @@ public class Menu {
 
     }
 
+    public void showGenerateMenu(){
+        System.out.println("\nHow many trains do you want? (Each train have a random number of carts)\n" +
+                "(Type '0' to go back)\n");
+    }
+
     public void showWriteYourOwnMenu(){
         System.out.println("\nPlease write wanted SQL statement:");
     }
@@ -106,9 +129,11 @@ public class Menu {
         System.out.println(
                 "\nAutomatic Marshalling Yard \n" +
                         "-------------------\n" +
+                        "3. Generate trains. \n" +
+                        "4. Sort arriving trains. \n" +
+                        "-------------------\n" +
                         "1. Lookup cart/train information. \n" +
                         "2. Write your own SQL search. \n" +
-                        "3. Test cargo2. \n" +
                         "-------------------\n" +
                         "0. Exit program. \n");
 
