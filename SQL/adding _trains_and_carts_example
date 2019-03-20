@@ -1,0 +1,23 @@
+-- DETTE KAN KØRES I INTELLIJ FOR AT TILFØJE ET NYT TRAIN MED TO CARTS.
+-- VI BRUGER DETTE TIL AT OPRETTE TRAINS OG KØRER ET LOOP SOM TILFØJER ALLE
+-- CARTS (MED DERES VARIABLER) ET TRAIN EVENTUELT SKULLE HAVE. STATUS VIL
+-- ALTID VÆRE 1, DA TOGET VIL VÆRE ARRIVING NÅR DET FØRST OPRETTES.
+BEGIN;
+INSERT INTO Train (status_id) VALUE (1);
+SELECT LAST_INSERT_ID() INTO @trainID;
+
+INSERT INTO Cart (cargo_id, weight_id, destination_id)
+  VALUES ((SELECT cargo_id FROM Cargo WHERE type='Food'),
+          (SELECT weight_id FROM Weight WHERE type='Heavy'),
+          (SELECT destination_id FROM Destination WHERE name='Berlin'));
+INSERT INTO Train_cart_link (train_id, cart_id)
+  VALUES (@trainID, LAST_INSERT_ID());
+
+INSERT INTO Cart (cargo_id, weight_id, destination_id)
+  VALUES ((SELECT cargo_id FROM Cargo WHERE type='Cars'),
+          (SELECT weight_id FROM Weight WHERE type='Heavy'),
+          (SELECT destination_id FROM Destination WHERE name='Kassel'));
+INSERT INTO Train_cart_link (train_id, cart_id)
+  VALUES (@trainID, LAST_INSERT_ID());
+
+COMMIT;
