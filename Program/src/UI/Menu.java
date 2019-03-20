@@ -3,7 +3,8 @@ package UI;
 import Database.*;
 import Query.Sql;
 
-import java.util.*;
+import static Query.Sql.*;
+
 
 public class Menu {
 
@@ -19,20 +20,25 @@ public class Menu {
         while (running){
             clearScreen();
             showMainMenu();
-            switch (Input.getIntRangeFromConsole(0,3 )) {
+            switch (Input.getIntRangeFromConsole(0,4 )) {
                 case 1:
                     clearScreen();
-                    lookupMenu();
+                    generateMenu();
                     break;
                 case 2:
                     clearScreen();
-                    writeYourOwnMenu();
+                    System.out.println("THIS IS MISSING");
+                    Input.pressToContinue();
                     break;
                 case 3:
                     clearScreen();
-                    generateMenu();
-
+                    lookupMenu();
                     break;
+                case 4:
+                    clearScreen();
+                    writeYourOwnMenu();
+                    break;
+
 
 
                 case 0:
@@ -58,12 +64,12 @@ public class Menu {
                 break;
 
             default:
+                clearScreen();
                 for (trainCounter = 0; trainCounter < numberOfTrains; trainCounter++) {
                     Sql.addTrains(new Train(),conn.getConnection());
-                    System.out.println("Færdig");
 
                 }
-                System.out.println("\nSuccesfully added all trains (" + trainCounter + ").");
+                System.out.println("Succesfully added all trains (" + trainCounter + ") and their carts.\n");
                 Input.pressToContinue();
                 break;
         }
@@ -102,7 +108,9 @@ public class Menu {
                 break;
 
             default:
-                this.chosenID = inputID;
+                clearScreen();
+                System.out.println(Sql.getInfo(s, inputID, conn.getConnection()));
+                Input.pressToContinue();
                 break;
         }
 
@@ -111,29 +119,41 @@ public class Menu {
     public void writeYourOwnMenu(){
         clearScreen();
         showWriteYourOwnMenu();
-        System.out.println(Sql.writeYourOwn(Input.getStringFromConsole(), conn.getConnection()));
-        Input.pressToContinue();
+        String inputString;
+        switch (inputString = Input.getStringFromConsole()) {
+            case "0":
+                clearScreen();
+                break;
+
+            default:
+                System.out.println(Sql.writeYourOwn(inputString, conn.getConnection()));
+                Input.pressToContinue();
+                break;
+        }
+
+
 
     }
 
     public void showGenerateMenu(){
-        System.out.println("\nHow many trains do you want? (Each train have a random number of carts)\n" +
+        System.out.println("How many trains do you want? \nEach train have a random number of carts!\n" +
                 "(Type '0' to go back)\n");
     }
 
     public void showWriteYourOwnMenu(){
-        System.out.println("\nPlease write wanted SQL statement:");
+        System.out.println("Please write wanted SQL statement:\n" +
+                "(Type '0' to go back)\n");
     }
 
     public void showMainMenu() {
         System.out.println(
-                "\nAutomatic Marshalling Yard \n" +
+                "Automatic Marshalling Yard \n" +
                         "-------------------\n" +
-                        "3. Generate trains. \n" +
-                        "4. Sort arriving trains. \n" +
+                        "1. Generate trains. \n" +
+                        "2. Sort arriving trains. \n" +
                         "-------------------\n" +
-                        "1. Lookup cart/train information. \n" +
-                        "2. Write your own SQL search. \n" +
+                        "3. Lookup cart/train information. \n" +
+                        "4. Write your own SQL search. \n" +
                         "-------------------\n" +
                         "0. Exit program. \n");
 
@@ -141,7 +161,7 @@ public class Menu {
 
     public void showLookupMenu(){
         System.out.println(
-                "\nWhat information do you want? \n" +
+                "What information do you want? \n" +
                         "-------------------\n" +
                         "1. Train \n" +
                         "2. Cart \n" +
@@ -151,7 +171,7 @@ public class Menu {
     }
 
     public void showSpecifyIdMenu(String s){
-        System.out.println("\nPlease specify "+ s +" ID: \n" +
+        System.out.println("Please specify "+ s +" ID: \n" +
                             "(Type '0' to go back)\n");
     }
 

@@ -69,9 +69,8 @@ public class Sql {
             stmt3.executeUpdate();
 
             conn.commit();
+            conn.setAutoCommit(true);
             conn.close();
-
-            System.out.println(startString + addCartString + endString);
 
         } catch (SQLException e) {
 
@@ -79,5 +78,81 @@ public class Sql {
 
         }
     }
+
+    public static String getInfo(String type, int givenId, Connection conn) {
+
+        String returnString = "Empty";
+        String chosenID = Integer.toString(givenId);
+
+        try{
+
+            Statement stmt = conn.createStatement();
+
+            if (type.equals("train")) {
+
+                String trainSQL = "SELECT Train.train_id, Status.status FROM Train\n" +
+                        "INNER JOIN Status on Train.status_id = Status.status_id\n" +
+                        "WHERE Train.train_id = "+ chosenID +";";
+
+                String cartSQL = "SELECT Train_cart_link.train_id, Train_cart_link.cart_id, Destination.name, Cargo.type, Weight.type FROM Train_cart_link\n" +
+                        "INNER JOIN Cart on Train_cart_link.cart_id = Cart.cart_id\n" +
+                        "INNER JOIN Destination on Cart.destination_id = Destination.destination_id\n" +
+                        "INNER JOIN Cargo on Cart.cargo_id = Cargo.cargo_id\n" +
+                        "INNER JOIN Weight on Cart.weight_id = Weight.weight_id\n" +
+                        "WHERE train_id = "+ chosenID +";";
+
+                ResultSet trs1 = stmt.executeQuery(trainSQL);
+
+                while (trs1.next()) {
+                    returnString = "================================\n" +
+                            "Train [" + trs1.getInt(1) + "] - Status: [" + trs1.getString(2) + "]\n" +
+                            "================================\n";
+                }
+
+                ResultSet trs2 = stmt.executeQuery(cartSQL);
+
+                while (trs2.next()) {
+                    returnString += "\nCart [" + trs2.getInt(2) + "]\n" +
+                            "--------------------------------\n" +
+                            "Destination:\t" + trs2.getString(3) + "\n" +
+                            "Cargo:\t\t" + trs2.getString(4) + "\n" +
+                            "Weight:\t\t" + trs2.getString(5) + "\n";
+                }
+
+
+
+            } else {
+
+                String carSQL = "SELECT Cart.cart_id, Train_cart_link.train_id, Destination.name, Cargo.type, Weight.type FROM Cart\n" +
+                        "INNER JOIN Train_cart_link ON Cart.cart_id = Train_cart_link.cart_id\n" +
+                        "INNER JOIN Destination on Cart.destination_id = Destination.destination_id\n" +
+                        "INNER JOIN Cargo on Cart.cargo_id = Cargo.cargo_id\n" +
+                        "INNER JOIN Weight on Cart.weight_id = Weight.weight_id\n" +
+                        "WHERE Cart.cart_id = " + chosenID +";";
+
+                ResultSet crs = stmt.executeQuery(carSQL);
+
+                while (crs.next()) {
+                    returnString = "================================\n" +
+                            "Cart [" + crs.getInt(1) + "] - Located on Train [" + crs.getInt(2) + "]\n" +
+                            "================================\n" +
+                            "Destination:\t" + crs.getString(3) + "\n" +
+                            "Cargo:\t\t" + crs.getString(4) + "\n" +
+                            "Weight:\t\t" + crs.getString(5) + "\n";
+                }
+
+
+            }
+
+        }
+        catch (SQLException e) {
+            e.getMessage();
+        }
+
+        return returnString;
+
+    }
+
+
 
 }
