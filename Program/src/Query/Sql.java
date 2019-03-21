@@ -153,6 +153,66 @@ public class Sql {
 
     }
 
+    public static ArrayList<Train> getArrivingCars(Connection conn) {
+
+        // Array vi gemmer togets vogne i.
+        ArrayList<Cart> cartArray = new ArrayList<>();
+
+        // Array vi gemmer toget i.
+        ArrayList<Train> trainArray = new ArrayList<>();
+
+
+        try{
+            Statement stmt = conn.createStatement();
+
+            String arrivingTrainSQL = "SELECT Train.train_id, Weight.type, Cargo.type, Destination.name FROM Cart\n" +
+                    "INNER JOIN Weight on Cart.weight_id = Weight.weight_id\n" +
+                    "INNER JOIN Cargo on Cart.cargo_id = Cargo.cargo_id\n" +
+                    "INNER JOIN Destination on Cart.destination_id = Destination.destination_id\n" +
+                    "INNER JOIN Train_cart_link ON Cart.cart_id = Train_cart_link.cart_id\n" +
+                    "INNER JOIN Train ON Train_cart_link.train_id = Train.train_id\n" +
+                    "WHERE Train_cart_link.train_id " +
+                    "IN (SELECT train_id FROM Train WHERE status_id = 1)\n" +
+                    "ORDER BY Train.train_id, Destination.name ASC;";
+
+            ResultSet arrivingRS = stmt.executeQuery(arrivingTrainSQL);
+
+            int currentID;
+            int previousID = 0;
+            cartArray.clear();
+            while (arrivingRS.next()){
+
+                currentID = arrivingRS.getInt(1);
+
+                if (currentID == previousID || previousID == 0) {
+                    Cart newCart = new Cart(arrivingRS.getString(2), arrivingRS.getString(3), arrivingRS.getString(4));
+                    cartArray.add(newCart);
+                } else {
+                    Train newTrain = new Train(cartArray);
+                    trainArray.add(newTrain);
+                    cartArray.clear();
+                    Cart newCart = new Cart(arrivingRS.getString(2), arrivingRS.getString(3), arrivingRS.getString(4));
+                    cartArray.add(newCart);
+                }
+                previousID = currentID;
+
+            }
+            Train newTrain = new Train(cartArray);
+            trainArray.add(newTrain);
+
+        }
+        catch (SQLException e) {
+            e.getMessage();
+        }
+
+        return trainArray;
+
+
+
+
+
+    }
+
 
 
 }

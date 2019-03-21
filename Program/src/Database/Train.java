@@ -9,7 +9,7 @@ public class Train {
 
 
     // Array vi gemmer togets vogne i.
-    private ArrayList<Cart> cartArray = new ArrayList<Cart>();
+    private ArrayList<Cart> cartArray = new ArrayList<>();
 
 
     // Konstruktor der tilføjer et tilfædigt antal vogne (op til 10).
@@ -20,6 +20,9 @@ public class Train {
         }
     }
 
+    public Train(ArrayList<Cart> cartArray) {
+        this.cartArray = cartArray;
+    }
 
     // Tilfældigt antal vogne på toget.
     private int numberOfCarts(){

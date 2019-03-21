@@ -35,6 +35,11 @@ public class Cart {
 
     }
 
+    public Cart(String weight, String cargo, String destination) {
+        this.weight = weight;
+        this.cargo = cargo;
+        this.destination = destination;
+    }
 
     // Denne metode tager et tal og returnere så et tal fra 1 til det tal.
     // Den kan vi så give størrelsen af et ønsket array og derved finde et tilfældigt element deri.

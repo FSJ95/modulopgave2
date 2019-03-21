@@ -1,6 +1,7 @@
 package UI;
 
 import Database.*;
+import Yard.*;
 import Query.Sql;
 
 import static Query.Sql.*;
@@ -27,7 +28,8 @@ public class Menu {
                     break;
                 case 2:
                     clearScreen();
-                    System.out.println("THIS IS MISSING");
+                    Sorting yardSorting = new Sorting(Sql.getArrivingCars(conn.getConnection()));
+                    yardSorting.startSorting();
                     Input.pressToContinue();
                     break;
                 case 3:
