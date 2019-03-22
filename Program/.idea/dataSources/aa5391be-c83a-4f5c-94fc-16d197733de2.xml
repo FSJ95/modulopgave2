@@ -1347,12 +1347,14 @@
       <RefSchemaName>mydb</RefSchemaName>
       <RefTableName>Train</RefTableName>
       <RefColNames>train_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
     </foreign-key>
     <foreign-key id="329" parent="281" name="cart_id">
       <ColNames>cart_id</ColNames>
       <RefSchemaName>mydb</RefSchemaName>
       <RefTableName>Cart</RefTableName>
       <RefColNames>cart_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
     </foreign-key>
     <column id="330" parent="282" name="weight_id">
       <Position>1</Position>

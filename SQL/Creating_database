@@ -1,0 +1,210 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `mydb` ;
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
+USE `mydb` ;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Weight`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Weight` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`Weight` (
+  `weight_id` INT NOT NULL AUTO_INCREMENT,
+  `type` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`weight_id`),
+  UNIQUE INDEX `weight_id_UNIQUE` (`weight_id` ASC) VISIBLE,
+  UNIQUE INDEX `weight_UNIQUE` (`type` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Cargo`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Cargo` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`Cargo` (
+  `cargo_id` INT NOT NULL AUTO_INCREMENT,
+  `type` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`cargo_id`),
+  UNIQUE INDEX `id_UNIQUE` (`cargo_id` ASC) VISIBLE,
+  UNIQUE INDEX `wood_UNIQUE` (`type` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Destination`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Destination` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`Destination` (
+  `destination_id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`destination_id`),
+  UNIQUE INDEX `id_UNIQUE` (`destination_id` ASC) VISIBLE,
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Status`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Status` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`Status` (
+  `status_id` INT NOT NULL AUTO_INCREMENT,
+  `status` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`status_id`),
+  UNIQUE INDEX `status_UNIQUE` (`status` ASC) VISIBLE,
+  UNIQUE INDEX `status_id_UNIQUE` (`status_id` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Train`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Train` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`Train` (
+  `train_id` INT NOT NULL AUTO_INCREMENT,
+  `status_id` INT NOT NULL,
+  PRIMARY KEY (`train_id`),
+  UNIQUE INDEX `id_UNIQUE` (`train_id` ASC) VISIBLE,
+  INDEX `status_id_idx` (`status_id` ASC) VISIBLE,
+  CONSTRAINT `status_id`
+    FOREIGN KEY (`status_id`)
+    REFERENCES `mydb`.`Status` (`status_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Cart`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Cart` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`Cart` (
+  `cart_id` INT NOT NULL AUTO_INCREMENT,
+  `cargo_id` INT NOT NULL,
+  `weight_id` INT NOT NULL,
+  `destination_id` INT NOT NULL,
+  PRIMARY KEY (`cart_id`),
+  UNIQUE INDEX `cart_id_UNIQUE` (`cart_id` ASC) VISIBLE,
+  INDEX `cargo_id_idx` (`cargo_id` ASC) VISIBLE,
+  INDEX `weight_id_idx` (`weight_id` ASC) VISIBLE,
+  INDEX `destination_id_idx` (`destination_id` ASC) VISIBLE,
+  CONSTRAINT `cargo_id`
+    FOREIGN KEY (`cargo_id`)
+    REFERENCES `mydb`.`Cargo` (`cargo_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `weight_id`
+    FOREIGN KEY (`weight_id`)
+    REFERENCES `mydb`.`Weight` (`weight_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `destination_id`
+    FOREIGN KEY (`destination_id`)
+    REFERENCES `mydb`.`Destination` (`destination_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Train_cart_link`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Train_cart_link` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`Train_cart_link` (
+  `train_id` INT NOT NULL,
+  `cart_id` INT NOT NULL,
+  INDEX `cart_id_idx` (`cart_id` ASC) VISIBLE,
+  INDEX `train_id_idx` (`train_id` ASC) VISIBLE,
+  CONSTRAINT `cart_id`
+    FOREIGN KEY (`cart_id`)
+    REFERENCES `mydb`.`Cart` (`cart_id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `train_id`
+    FOREIGN KEY (`train_id`)
+    REFERENCES `mydb`.`Train` (`train_id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `mydb`.`Weight`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `mydb`;
+INSERT INTO `mydb`.`Weight` (`weight_id`, `type`) VALUES (1, 'Light');
+INSERT INTO `mydb`.`Weight` (`weight_id`, `type`) VALUES (2, 'Medium');
+INSERT INTO `mydb`.`Weight` (`weight_id`, `type`) VALUES (3, 'Heavy');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `mydb`.`Cargo`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `mydb`;
+INSERT INTO `mydb`.`Cargo` (`cargo_id`, `type`) VALUES (1, 'Wood');
+INSERT INTO `mydb`.`Cargo` (`cargo_id`, `type`) VALUES (2, 'Steel');
+INSERT INTO `mydb`.`Cargo` (`cargo_id`, `type`) VALUES (3, 'Oil');
+INSERT INTO `mydb`.`Cargo` (`cargo_id`, `type`) VALUES (4, 'Gasoline');
+INSERT INTO `mydb`.`Cargo` (`cargo_id`, `type`) VALUES (5, 'Food');
+INSERT INTO `mydb`.`Cargo` (`cargo_id`, `type`) VALUES (6, 'Cars');
+INSERT INTO `mydb`.`Cargo` (`cargo_id`, `type`) VALUES (7, 'General Goods');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `mydb`.`Destination`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `mydb`;
+INSERT INTO `mydb`.`Destination` (`destination_id`, `name`) VALUES (1, 'Duisburg');
+INSERT INTO `mydb`.`Destination` (`destination_id`, `name`) VALUES (2, 'Hannover');
+INSERT INTO `mydb`.`Destination` (`destination_id`, `name`) VALUES (3, 'Berlin');
+INSERT INTO `mydb`.`Destination` (`destination_id`, `name`) VALUES (4, 'Köln');
+INSERT INTO `mydb`.`Destination` (`destination_id`, `name`) VALUES (5, 'Kassel');
+INSERT INTO `mydb`.`Destination` (`destination_id`, `name`) VALUES (6, 'Leipzig');
+INSERT INTO `mydb`.`Destination` (`destination_id`, `name`) VALUES (7, 'Frankfurt');
+INSERT INTO `mydb`.`Destination` (`destination_id`, `name`) VALUES (8, 'Nürnberg');
+INSERT INTO `mydb`.`Destination` (`destination_id`, `name`) VALUES (9, 'Munich');
+INSERT INTO `mydb`.`Destination` (`destination_id`, `name`) VALUES (10, 'Stuttgart');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `mydb`.`Status`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `mydb`;
+INSERT INTO `mydb`.`Status` (`status_id`, `status`) VALUES (1, 'Arrived');
+INSERT INTO `mydb`.`Status` (`status_id`, `status`) VALUES (2, 'Sorting');
+INSERT INTO `mydb`.`Status` (`status_id`, `status`) VALUES (3, 'Departed');
+INSERT INTO `mydb`.`Status` (`status_id`, `status`) VALUES (4, 'Scratch');
+
+COMMIT;

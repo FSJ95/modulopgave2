@@ -32,14 +32,39 @@ public class Sql {
 
     }
 
-    public static void addTrains(Train receivedTrain, Connection conn) {
+
+    public static void addFinishedTrains(ArrayList<Train> finishedTrains, Connection conn) {
+
+        try{
+
+            Statement stmt = conn.createStatement();
+
+            stmt.executeUpdate("DELETE Train, Train_cart_link, Cart FROM Train\n" +
+                    "INNER JOIN Train_cart_link on Train.train_id = Train_cart_link.train_id\n" +
+                    "INNER JOIN Cart on Train_cart_link.cart_id = Cart.cart_id\n" +
+                    "WHERE status_id = 1;");
+
+            for (Train train : finishedTrains) {
+                addTrains(train, conn, 3);
+            }
+            conn.close();
+
+        }
+        catch (SQLException e) {
+            e.getMessage();
+        }
+
+
+    }
+
+    public static void addTrains(Train receivedTrain, Connection conn, int status) {
 
         try {
             conn.setAutoCommit(false);
 
             ArrayList<Cart> cartArray = receivedTrain.getCartArray();
 
-            String startString = "BEGIN; \nINSERT INTO Train (status_id) VALUE (1);\n" +
+            String startString = "BEGIN; \nINSERT INTO Train (status_id) VALUE (" + status + ");\n" +
                     "SELECT LAST_INSERT_ID() INTO @trainID;\n";
 
 
@@ -48,16 +73,29 @@ public class Sql {
 
             String endString = "COMMIT;";
 
+            if (status == 1) {
+                for (Cart cart : cartArray) {
+                    addCartString += "INSERT INTO Cart (cargo_id, weight_id, destination_id) " +
+                            "VALUES ((SELECT cargo_id FROM Cargo WHERE type='" + cart.getCargo() + "'), " +
+                            "(SELECT weight_id FROM Weight WHERE type='" + cart.getWeight() + "'), " +
+                            "(SELECT destination_id FROM Destination WHERE name='" + cart.getDestination() + "'));\n" +
+                            "INSERT INTO Train_cart_link (train_id, cart_id) " +
+                            "VALUES (@trainID, LAST_INSERT_ID());\n";
 
-            for (Cart cart : cartArray) {
-                addCartString += "INSERT INTO Cart (cargo_id, weight_id, destination_id) " +
-                    "VALUES ((SELECT cargo_id FROM Cargo WHERE type='" + cart.getCargo() + "'), " +
-                    "(SELECT weight_id FROM Weight WHERE type='" + cart.getWeight() + "'), " +
-                    "(SELECT destination_id FROM Destination WHERE name='" + cart.getDestination() + "'));\n" +
-                    "INSERT INTO Train_cart_link (train_id, cart_id) " +
-                    "VALUES (@trainID, LAST_INSERT_ID());\n";
+                }
+            } else if (status == 3) {
+                for (Cart cart : cartArray) {
+                    addCartString += "INSERT INTO Cart (cart_id, cargo_id, weight_id, destination_id) " +
+                            "VALUES ((" + cart.getID() + "), " +
+                            "(SELECT cargo_id FROM Cargo WHERE type='" + cart.getCargo() + "'), " +
+                            "(SELECT weight_id FROM Weight WHERE type='" + cart.getWeight() + "'), " +
+                            "(SELECT destination_id FROM Destination WHERE name='" + cart.getDestination() + "'));\n" +
+                            "INSERT INTO Train_cart_link (train_id, cart_id) " +
+                            "VALUES (@trainID, " + cart.getID() + ");\n";
 
+                }
             }
+
 
             PreparedStatement stmt1 = conn.prepareStatement(startString);
             stmt1.executeUpdate();
@@ -70,7 +108,6 @@ public class Sql {
 
             conn.commit();
             conn.setAutoCommit(true);
-            conn.close();
 
         } catch (SQLException e) {
 
@@ -99,7 +136,7 @@ public class Sql {
                         "INNER JOIN Destination on Cart.destination_id = Destination.destination_id\n" +
                         "INNER JOIN Cargo on Cart.cargo_id = Cargo.cargo_id\n" +
                         "INNER JOIN Weight on Cart.weight_id = Weight.weight_id\n" +
-                        "WHERE train_id = "+ chosenID +";";
+                        "WHERE train_id = "+ chosenID +" \n ORDER BY Destination.name ASC;";
 
                 ResultSet trs1 = stmt.executeQuery(trainSQL);
 
@@ -128,7 +165,7 @@ public class Sql {
                         "INNER JOIN Destination on Cart.destination_id = Destination.destination_id\n" +
                         "INNER JOIN Cargo on Cart.cargo_id = Cargo.cargo_id\n" +
                         "INNER JOIN Weight on Cart.weight_id = Weight.weight_id\n" +
-                        "WHERE Cart.cart_id = " + chosenID +";";
+                        "WHERE Cart.cart_id = " + chosenID +" \n ORDER BY Destination.name ASC;";
 
                 ResultSet crs = stmt.executeQuery(carSQL);
 
@@ -165,7 +202,8 @@ public class Sql {
         try{
             Statement stmt = conn.createStatement();
 
-            String arrivingTrainSQL = "SELECT Train.train_id, Weight.type, Cargo.type, Destination.name FROM Cart\n" +
+            String arrivingTrainSQL = "SELECT Train.train_id, Weight.type, Cargo.type, Destination.name, Cart.cart_id " +
+                    "FROM Cart\n" +
                     "INNER JOIN Weight on Cart.weight_id = Weight.weight_id\n" +
                     "INNER JOIN Cargo on Cart.cargo_id = Cargo.cargo_id\n" +
                     "INNER JOIN Destination on Cart.destination_id = Destination.destination_id\n" +
@@ -185,13 +223,13 @@ public class Sql {
                 currentID = arrivingRS.getInt(1);
 
                 if (currentID == previousID || previousID == 0) {
-                    Cart newCart = new Cart(arrivingRS.getString(2), arrivingRS.getString(3), arrivingRS.getString(4));
+                    Cart newCart = new Cart(arrivingRS.getString(2), arrivingRS.getString(3), arrivingRS.getString(4), arrivingRS.getInt(5));
                     cartArray.add(newCart);
                 } else {
                     Train newTrain = new Train(cartArray);
                     trainArray.add(newTrain);
-                    cartArray.clear();
-                    Cart newCart = new Cart(arrivingRS.getString(2), arrivingRS.getString(3), arrivingRS.getString(4));
+                    cartArray = new ArrayList<>();
+                    Cart newCart = new Cart(arrivingRS.getString(2), arrivingRS.getString(3), arrivingRS.getString(4), arrivingRS.getInt(5));
                     cartArray.add(newCart);
                 }
                 previousID = currentID;
@@ -207,11 +245,8 @@ public class Sql {
 
         return trainArray;
 
-
-
-
-
     }
+
 
 
 

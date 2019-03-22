@@ -23,15 +23,10 @@ public class Cart {
 
     // Vores variabler vi gemmer de valgte værdier i.
     private String weight, cargo, destination;
+    private int ID;
 
 
     public Cart() {
-
-        fillArrays();
-
-        this.weight = randomWeight(randomNumberGenerator(weightArray.size()));
-        this.cargo = randomCargo(randomNumberGenerator(cargoArray.size()));
-        this.destination = randomDestination(randomNumberGenerator(destinationArray.size()));
 
     }
 
@@ -39,6 +34,21 @@ public class Cart {
         this.weight = weight;
         this.cargo = cargo;
         this.destination = destination;
+    }
+
+    public Cart(String weight, String cargo, String destination, int cartID) {
+        this.weight = weight;
+        this.cargo = cargo;
+        this.destination = destination;
+        this.ID = cartID;
+    }
+
+    public void fillCart(){
+        fillArrays();
+
+        this.weight = randomWeight(randomNumberGenerator(weightArray.size()));
+        this.cargo = randomCargo(randomNumberGenerator(cargoArray.size()));
+        this.destination = randomDestination(randomNumberGenerator(destinationArray.size()));
     }
 
     // Denne metode tager et tal og returnere så et tal fra 1 til det tal.
@@ -104,6 +114,9 @@ public class Cart {
 
     public String getDestination() {
         return destination;
+    }
+    public int getID() {
+        return ID;
     }
 
 

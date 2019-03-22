@@ -28,8 +28,9 @@ public class Menu {
                     break;
                 case 2:
                     clearScreen();
-                    Sorting yardSorting = new Sorting(Sql.getArrivingCars(conn.getConnection()));
-                    yardSorting.startSorting();
+                    Sorting yardSorting = new Sorting(getArrivingCars(conn.getConnection()));
+                    addFinishedTrains(yardSorting.startSorting(), conn.getConnection());
+                    System.out.println("Trains have now been sorted");
                     Input.pressToContinue();
                     break;
                 case 3:
@@ -68,7 +69,9 @@ public class Menu {
             default:
                 clearScreen();
                 for (trainCounter = 0; trainCounter < numberOfTrains; trainCounter++) {
-                    Sql.addTrains(new Train(),conn.getConnection());
+                    Train train = new Train();
+                    train.generateCarts();
+                    Sql.addTrains(train,conn.getConnection(), 1);
 
                 }
                 System.out.println("Succesfully added all trains (" + trainCounter + ") and their carts.\n");
